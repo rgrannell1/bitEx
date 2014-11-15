@@ -165,8 +165,6 @@ var lookupUser = function (user, callback) {
 
 
 
-
-
 // check if a user is registered, and compare their
 // hash against the hash in the database. Return a boolean
 // denoting if they are signed up / gave the correct credentials.
@@ -326,14 +324,22 @@ var user = {
 	'password': 'dollah'
 }
 
-var purchase = {
+var purchase = sale = {
 	'type': 'euro',
-	'quantity': 100
+	'quantity': 75
 }
 
 
 
+var databaseBuy = function (user, purchase, callback) {
+	// move coin around, deduct balances.
+	callback("something happened.")
+}
 
+var databaseSell = function (user, sale, callback) {
+	// move coin around, deduct balances.
+	callback("something else happened.")
+}
 
 var buy = function (user, purchase, callback) {
 
@@ -342,9 +348,11 @@ var buy = function (user, purchase, callback) {
 		getBitcoinRate(function (rate) {
 
 			var euros  = purchase.quantity
-			var amount = euros / rate.price // bitcoin can be a float.
+			var quantity = euros / rate.price // bitcoin can be a float.
 
-			// db!
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
 
 		})
 
@@ -352,11 +360,14 @@ var buy = function (user, purchase, callback) {
 
 		getBitcoinRate(function (rate) {
 
-			var amount = purchase.quantity
-			var euros  = amount * rate.price
+			var quantity = purchase.quantity
+			var euros  = quantity * rate.price
 
-			// db!
+			// do something with price.
 
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
 		})
 
 
@@ -366,7 +377,43 @@ var buy = function (user, purchase, callback) {
 
 }
 
+
+
+
+
 var sell = function (user, sale, callback) {
+
+	if (sale.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = sale.quantity
+			var quantity = euros / rate.price // bitcoin can be a float.
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+
+		})
+
+	} else if (sale.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var quantity = sale.quantity
+			var euros  = quantity * rate.price
+
+			// do something with price (send to UI)
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
 
 }
 
@@ -374,3 +421,4 @@ var sell = function (user, sale, callback) {
 
 
 buy(user, purchase, console.log)
+sell(user, sale, console.log)
