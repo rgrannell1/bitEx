@@ -5,6 +5,7 @@ var bodyParser = require("body-parser")
 
 var request = require("request")
 var crypto  = require('crypto')
+var express  = require('express')
 
 // service module
 var app = express()
@@ -21,14 +22,14 @@ var getBitcoinRate = function (callback) {
 	request('https://api.bitcoinaverage.com/ticker/EUR/', function (err, res, body) {
 
 		if (err) {
-			console.log("getBitcoinRate:" + JSON.stringify(err))
+			throw err
 		}
 
 		// TODO set content-type header instead of this crap.
 		body = JSON.parse(body)
 
 		callback({
-			price: body.last,
+			price: parseFloat(body.last, 10),
 			time:  (new Date).getTime()
 		})
 
@@ -125,16 +126,15 @@ var hashCredentials = function (user, salt, callback) {
 
 	var rounds = 100000    //100,000 rounds is secure enough.
 
-	crypto.pbkdf2(user.password, salt, rounds, 128, function (err, derivedKey) {
+	crypto.pbkdf2(user.email, salt, rounds, 128, function (err, derivedKey) {
 
 		if (err) {
-			// don't print call stack.
-			console.log("error in pbkdf2.")
+			throw err
 		}
 
 		callback({
-			email:   user.email,
-			salt:       salt,
+			email: user.email,
+			salt: salt,
 			derivedKey: derivedKey.toString()
 		})
 
@@ -151,19 +151,17 @@ var isRegistered = function (user, callback) {
 	callback(true) // hard coded
 }
 
-//
+// Return the database row containing a particular email.
 
 var lookupUser = function (user, callback) {
 
 	callback({
 		user: 'bob',
-		password: '789232347924789234237894237894243mbh',
+		email: '789232347924789234237894237894243mbh',
 		salt: '0'
 	})
 
 }
-
-
 
 
 
@@ -187,7 +185,7 @@ var verifyLogin = function (user, callback) {
 
 				// === is insecure way of comparing (timing attacks).
 				hashCredentials(user, realCredentials.salt, function (cred) {
-					callback(cred.password === realCredentials.password)
+					callback(cred.email === realCredentials.email)
 				})
 
 			})
@@ -202,7 +200,6 @@ var verifyLogin = function (user, callback) {
 
 // HANDLE FOR VALIDATING USER CREDENTIALS.
 //
-// given the user's password and email.
 // check if the user is in the database, and that he or she
 // used the correct login credentials.
 //
@@ -221,7 +218,7 @@ var register = function (user, res, success, failure) {
 	// TODO
 }
 
-// VIEW RESOLVERS FOR SIGNIN 
+// VIEW RESOLVERS FOR SIGNIN
 var signinView = ( function() {
 
 	var success = function(res, user) {
@@ -239,7 +236,7 @@ var signinView = ( function() {
 
 } )()
 
-// VIEW RESOLVERS FOR SIGNIN 
+// VIEW RESOLVERS FOR SIGNIN
 var registerView = ( function() {
 
 	var success = function(res, user) {
@@ -272,10 +269,10 @@ var registerView = ( function() {
 app.post('/signin', function(req, res) {
 
 	var credentials = req.body;
-	
-	var user = { 
-		'email': credentials.email, 
-		'password': credentials.password 
+
+	var user = {
+		'email': credentials.email,
+		'password': credentials.password
 	}
 
 	signin(user, res, signinView.success, signinView.failure)
@@ -313,5 +310,136 @@ app.get('/resources/:type/:sub/:file', function(req, res) {
 })
 
 app.listen(8080)
+console.log("listening on port 8080")
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var user = {
+	'email': 'spendthrift@example.com',
+	'password': 'dollah'
+}
+
+var purchase = sale = {
+	'type': 'euro',
+	'quantity': 75
+}
+
+
+
+var databaseBuy = function (user, purchase, callback) {
+	// move coin around, deduct balances.
+	callback("something happened.")
+}
+
+var databaseSell = function (user, sale, callback) {
+	// move coin around, deduct balances.
+	callback("something else happened.")
+}
+
+var buy = function (user, purchase, callback) {
+
+	if (purchase.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = purchase.quantity
+			var quantity = euros / rate.price // bitcoin can be a float.
+
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
+
+		})
+
+	} else if (purchase.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var quantity = purchase.quantity
+			var euros  = quantity * rate.price
+
+			// do something with price.
+
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
+
+}
+
+
+
+
+
+var sell = function (user, sale, callback) {
+
+	if (sale.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = sale.quantity
+			var quantity = euros / rate.price // bitcoin can be a float.
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+
+		})
+
+	} else if (sale.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var quantity = sale.quantity
+			var euros  = quantity * rate.price
+
+			// do something with price (send to UI)
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
+
+}
+
+
+
+
+buy(user, purchase, console.log)
+sell(user, sale, console.log)
