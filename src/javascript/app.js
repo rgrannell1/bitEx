@@ -1,3 +1,89 @@
+#!/usr/bin/env node
+
+var request = require("request")
+
+
+
+
+
+// get the current exchange rate for bitcoin in euros per bitcoin.
+
+var getBitcoinRate = function (callback) {
+
+	request('https://api.bitcoinaverage.com/ticker/EUR/', function (err, res, body) {
+
+		if (err) {
+			console.log("getBitcoinRate:" + JSON.stringify(err))
+		}
+
+		// todo set application content type instead.
+		body = JSON.parse(body)
+
+		callback({
+			price: body.last,
+			time:  (new Date).getTime()
+		})
+
+	})
+}
+
+
+
+
+
+
+const a = function (str, val) {
+	return Object.prototype.toString.call(val).toLowerCase() ===
+		"[object " + str.toLowerCase() + "]"
+}
+
+
+
+
+module.exports = {
+	'a': a,
+	'array':  function (val) {
+		return a('array', val)
+	},
+	'boolean': function (val) {
+		return a('boolean', val)
+	},
+	'date': function (val) {
+		return a('date', val)
+	},
+	'error': function (val) {
+		return a('error', val)
+	},
+	'function': function (val) {
+		return a('function', val)
+	},
+	'null': function (val) {
+		return a('null', val)
+	},
+	'number': function (val) {
+		return a('number', val)
+	},
+	'object': function (val) {
+		return a('object', val)
+	},
+	'regexp': function (val) {
+		return a('regexp', val)
+	},
+	'string': function (val) {
+		return a('string', val)
+	},
+	'undefined': function (val) {
+		return a('undefined', val)
+	},
+	'what': function (val) {
+		return Object.prototype.toString.call(val).toLowerCase().slice(8, -1)
+	}
+}
+
+
+
+
+
 
 var is     = require('./is')
 var crypto = require('crypto')
@@ -53,7 +139,8 @@ var hashCredentials = function (user, salt, callback) {
 
 
 
-
+// Make a call to the database to check if the
+//
 
 var isRegistered = function (user, callback) {
 	callback(true) // hard coded
@@ -76,7 +163,8 @@ var lookupUser = function (user, callback) {
 
 
 // check if a user is registered, and compare their
-// hash against the hash in the database.
+// hash against the hash in the database. Return a boolean
+// denoting if they are signed up / gave the correct credentials.
 
 var verifyLogin = function (user, callback) {
 
@@ -92,7 +180,7 @@ var verifyLogin = function (user, callback) {
 				// check if the suppied credentials hash to the
 				// users actual stored hash.
 
-				// === is insecure way of comparing.
+				// === is insecure way of comparing (timing attacks).
 				hashCredentials(user, realCredentials.salt, function (cred) {
 					callback(cred.password === realCredentials.password)
 				})
@@ -101,19 +189,12 @@ var verifyLogin = function (user, callback) {
 
 		}
 	})
+
 }
 
 
 
 
-
-
-
-
-var user = {
-	username: "bob",
-	password: "password12345"
-}
 
 // given the user's password and username.
 // check if the user is in the database, and that he or she
@@ -129,8 +210,3 @@ var signin = function (user, success, failure) {
 	})
 
 }
-
-
-
-
-signin(user, console.log, console.log)
