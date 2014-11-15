@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+var express = require("express")
+var app = require("app")
+
 var request = require("request")
 var crypto  = require('crypto')
 
@@ -210,3 +213,11 @@ var signin = function (user, success, failure) {
 	})
 
 }
+
+
+// SIGN IN GET REQUEST FROM CLIENT
+//
+// takes the clients username & password
+// atempts to log them into the system
+
+
