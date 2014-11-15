@@ -217,6 +217,10 @@ var signin = function (user, res, success, failure) {
 
 }
 
+var register = function (user, res, success, failure) {
+	// TODO
+}
+
 // VIEW RESOLVERS FOR SIGNIN 
 var signinView = ( function() {
 
@@ -235,19 +239,56 @@ var signinView = ( function() {
 
 } )()
 
+// VIEW RESOLVERS FOR SIGNIN 
+var registerView = ( function() {
 
-// SIGN IN GET REQUEST FROM CLIENT
+	var success = function(res, user) {
+		return 'success';
+	}
+
+	var failure = function(res, user) {
+		return 'failure';
+	}
+
+	return {
+		'failure': failure,
+		'success': success
+	}
+
+} )()
+
+
+// SIGN IN REQUEST FROM CLIENT
 //
 // takes the clients email & password
 // atempts to log them into the system
 app.post('/signin', function(req, res) {
+
+	var credentials = req.body;
 	
 	var user = { 
-		'email': req.body.email, 
-		'password': req.body.password 
+		'email': credentials.email, 
+		'password': credentials.password 
 	}
 
 	signin(user, res, signinView.success, signinView.failure)
+})
+
+// REGISTRATION REQUEST FROM CLIENT
+//
+// takes the clients email & password
+// atempts to log them into the system
+app.post('/register', function(req, res) {
+
+	var credentials = req.body;
+
+	var user = {
+		'legalName': credentials.legalName,
+		'email': credentials.email,
+		'password': credentials.password
+	}
+
+	register(user, res, registerView.success, registerView.failure)
 })
 
 app.listen(8080)
