@@ -17,7 +17,6 @@ var getBitcoinRate = function (callback) {
 		callback({
 			price: body.last,
 			time:  (new Date).getTime()
-
 		})
 
 	})
