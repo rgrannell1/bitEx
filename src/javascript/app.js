@@ -29,7 +29,7 @@ var getBitcoinRate = function (callback) {
 		body = JSON.parse(body)
 
 		callback({
-			price: body.last,
+			price: parseFloat(body.last, 10),
 			time:  (new Date).getTime()
 		})
 
@@ -342,9 +342,9 @@ var buy = function (user, purchase, callback) {
 		getBitcoinRate(function (rate) {
 
 			var euros  = purchase.quantity
-			var amount = euros / rate // bitcoin can be a float.
+			var amount = euros / rate.price // bitcoin can be a float.
 
-			console.log(amount)
+			// db!
 
 		})
 
@@ -353,9 +353,9 @@ var buy = function (user, purchase, callback) {
 		getBitcoinRate(function (rate) {
 
 			var amount = purchase.quantity
-			var euros  = amount * rate
+			var euros  = amount * rate.price
 
-			console.log(amount)
+			// db!
 
 		})
 
@@ -369,7 +369,6 @@ var buy = function (user, purchase, callback) {
 var sell = function (user, sale, callback) {
 
 }
-
 
 
 
