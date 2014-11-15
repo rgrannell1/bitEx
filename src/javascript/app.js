@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 var request = require("request")
+var crypto  = require('crypto')
+
 
 
 
@@ -40,7 +42,7 @@ const a = function (str, val) {
 
 
 
-module.exports = {
+var is = {
 	'a': a,
 	'array':  function (val) {
 		return a('array', val)
@@ -84,9 +86,6 @@ module.exports = {
 
 
 
-
-var is     = require('./is')
-var crypto = require('crypto')
 
 
 
