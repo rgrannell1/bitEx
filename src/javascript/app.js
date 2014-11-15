@@ -221,3 +221,15 @@ var signin = function (user, success, failure) {
 // atempts to log them into the system
 
 
+
+
+
+
+
+var buy = function (user, order, callback) {
+
+}
+
+var sell = function (user, order, callback) {
+
+}
