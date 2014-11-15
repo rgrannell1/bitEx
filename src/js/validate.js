@@ -6,6 +6,12 @@ var crypto = require('crypto')
 
 
 
+
+
+
+
+// remove whitespace from the input user credentials.
+
 var trimCredentials = function (user) {
 
 	return {
@@ -14,6 +20,8 @@ var trimCredentials = function (user) {
 	}
 
 }
+
+// return a random salt.
 
 var makeSalt = function () {
 	return crypto.randomBytes(128).toString('base64')
@@ -51,6 +59,8 @@ var isRegistered = function (user, callback) {
 	callback(true) // hard coded
 }
 
+//
+
 var lookupUser = function (user, callback) {
 
 	callback({
@@ -83,7 +93,6 @@ var verifyLogin = function (user, callback) {
 				// users actual stored hash.
 
 				// === is insecure way of comparing.
-
 				hashCredentials(user, realCredentials.salt, function (cred) {
 					callback(cred.password === realCredentials.password)
 				})
@@ -110,4 +119,10 @@ var user = {
 
 
 
-verifyLogin(user, makeSalt, console.log)
+var signin = function (user, success, failure) {
+
+	verifyLogin(user, function (isValid) {
+		isValid ? success(user): failure(user)
+	})
+
+}
