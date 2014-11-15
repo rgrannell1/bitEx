@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 var request = require("request")
+var crypto  = require('crypto')
+
 
 
 
@@ -16,7 +18,7 @@ var getBitcoinRate = function (callback) {
 			console.log("getBitcoinRate:" + JSON.stringify(err))
 		}
 
-		// todo set application content type instead.
+		// TODO set content-type header instead of this crap.
 		body = JSON.parse(body)
 
 		callback({
@@ -32,7 +34,7 @@ var getBitcoinRate = function (callback) {
 
 
 
-const a = function (str, val) {
+var a = function (str, val) {
 	return Object.prototype.toString.call(val).toLowerCase() ===
 		"[object " + str.toLowerCase() + "]"
 }
@@ -40,7 +42,7 @@ const a = function (str, val) {
 
 
 
-module.exports = {
+var is = {
 	'a': a,
 	'array':  function (val) {
 		return a('array', val)
@@ -85,9 +87,6 @@ module.exports = {
 
 
 
-var is     = require('./is')
-var crypto = require('crypto')
-
 
 
 
@@ -118,7 +117,7 @@ var makeSalt = function () {
 
 var hashCredentials = function (user, salt, callback) {
 
-	const rounds = 100000    //100,000 rounds is secure enough.
+	var rounds = 100000    //100,000 rounds is secure enough.
 
 	crypto.pbkdf2(user.password, salt, rounds, 128, function (err, derivedKey) {
 
@@ -139,8 +138,8 @@ var hashCredentials = function (user, salt, callback) {
 
 
 
-// Make a call to the database to check if the
-//
+// Make a call to the database to check if the user
+// is registered.
 
 var isRegistered = function (user, callback) {
 	callback(true) // hard coded
@@ -195,7 +194,8 @@ var verifyLogin = function (user, callback) {
 
 
 
-
+// HANDLE FOR VALIDATING USER CREDENTIALS.
+//
 // given the user's password and username.
 // check if the user is in the database, and that he or she
 // used the correct login credentials.
