@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 var express = require("express")
-var app = require("app")
+var bodyParser = require("body-parser")
 
 var request = require("request")
 var crypto  = require('crypto')
 
+// service module
+var app = express()
 
-
+// parse request body data
+app.use(bodyParser.json())
 
 
 
@@ -103,7 +106,7 @@ var is = {
 var trimCredentials = function (user) {
 
 	return {
-		username: username.trim(),
+		email: email.trim(),
 		password: password.trim()
 	}
 
@@ -115,7 +118,7 @@ var makeSalt = function () {
 	return crypto.randomBytes(128).toString('base64')
 }
 
-// given a user object with a username and a password field,
+// given a user object with a email and a password field,
 // and possibly a salt, create the
 
 var hashCredentials = function (user, salt, callback) {
@@ -130,7 +133,7 @@ var hashCredentials = function (user, salt, callback) {
 		}
 
 		callback({
-			username:   user.username,
+			email:   user.email,
 			salt:       salt,
 			derivedKey: derivedKey.toString()
 		})
@@ -199,25 +202,54 @@ var verifyLogin = function (user, callback) {
 
 // HANDLE FOR VALIDATING USER CREDENTIALS.
 //
-// given the user's password and username.
+// given the user's password and email.
 // check if the user is in the database, and that he or she
 // used the correct login credentials.
 //
 // if they did, call the success callback on their credentials. If the
 // credentials were bad, call the failure callback on their credentials.
 
-var signin = function (user, success, failure) {
+var signin = function (user, res, success, failure) {
 
 	verifyLogin(user, function (isValid) {
-		isValid ? success(user): failure(user)
+		isValid ? success(res, user): failure(res, user)
 	})
 
 }
 
+// VIEW RESOLVERS FOR SIGNIN 
+var signinView = ( function() {
+
+	var success = function(res, user) {
+		return 'success';
+	}
+
+	var failure = function(res, user) {
+		return 'failure';
+	}
+
+	return {
+		'failure': failure,
+		'success': success
+	}
+
+} )()
+
 
 // SIGN IN GET REQUEST FROM CLIENT
 //
-// takes the clients username & password
+// takes the clients email & password
 // atempts to log them into the system
+app.post('/signin', function(req, res) {
+	
+	var user = { 
+		'email': req.body.email, 
+		'password': req.body.password 
+	}
+
+	signin(user, res, signinView.success, signinView.failure)
+})
+
+app.listen(8080)
 
 
