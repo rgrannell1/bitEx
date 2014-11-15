@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 
 var express = require("express")
-var app = require("app")
+var bodyParser = require("body-parser")
 
 var request = require("request")
 var crypto  = require('crypto')
 var express  = require('express')
 
+// service module
+var app = express()
 
-
+// parse request body data
+app.use(bodyParser.json())
 
 
 
@@ -105,7 +108,7 @@ var trimCredentials = function (user) {
 
 	return {
 		email: email.trim(),
-		email: email.trim()
+		password: password.trim()
 	}
 
 }
@@ -116,7 +119,7 @@ var makeSalt = function () {
 	return crypto.randomBytes(128).toString('base64')
 }
 
-// given a user object with a email and a email field,
+// given a user object with a email and a password field,
 // and possibly a salt, create the
 
 var hashCredentials = function (user, salt, callback) {
@@ -199,26 +202,95 @@ var verifyLogin = function (user, callback) {
 
 // HANDLE FOR VALIDATING USER CREDENTIALS.
 //
-// given the user's email and email.
 // check if the user is in the database, and that he or she
 // used the correct login credentials.
 //
 // if they did, call the success callback on their credentials. If the
 // credentials were bad, call the failure callback on their credentials.
 
-var signin = function (user, success, failure) {
+var signin = function (user, res, success, failure) {
 
 	verifyLogin(user, function (isValid) {
-		isValid ? success(user): failure(user)
+		isValid ? success(res, user): failure(res, user)
 	})
 
 }
 
+var register = function (user, res, success, failure) {
+	// TODO
+}
 
-// SIGN IN GET REQUEST FROM CLIENT
+// VIEW RESOLVERS FOR SIGNIN
+var signinView = ( function() {
+
+	var success = function(res, user) {
+		return 'success';
+	}
+
+	var failure = function(res, user) {
+		return 'failure';
+	}
+
+	return {
+		'failure': failure,
+		'success': success
+	}
+
+} )()
+
+// VIEW RESOLVERS FOR SIGNIN
+var registerView = ( function() {
+
+	var success = function(res, user) {
+		return 'success';
+	}
+
+	var failure = function(res, user) {
+		return 'failure';
+	}
+
+	return {
+		'failure': failure,
+		'success': success
+	}
+
+} )()
+
+
+// SIGN IN REQUEST FROM CLIENT
 //
-// takes the clients username & password
+// takes the clients email & password
 // atempts to log them into the system
+app.post('/signin', function(req, res) {
+
+	var credentials = req.body;
+
+	var user = {
+		'email': credentials.email,
+		'password': credentials.password
+	}
+
+	signin(user, res, signinView.success, signinView.failure)
+})
+
+// REGISTRATION REQUEST FROM CLIENT
+//
+// takes the clients email & password
+// atempts to log them into the system
+app.post('/register', function(req, res) {
+
+	var credentials = req.body;
+
+	var user = {
+		'legalName': credentials.legalName,
+		'email': credentials.email,
+		'password': credentials.password
+	}
+
+	register(user, res, registerView.success, registerView.failure)
+})
+
+app.listen(8080)
 
 
 
