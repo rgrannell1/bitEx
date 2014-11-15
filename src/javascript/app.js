@@ -302,10 +302,10 @@ app.get('/', function(req, res) {
 
 // load resources such as js, css & image files
 app.get('/resources/:type/:sub/:file', function(req, res) {
-	
+
 	var params = req.params
 	var dPath = params.type + '/' + params.sub + '/' + params.file
-	
+
 	res.sendFile(__dirname + '/client/resources/' + dPath)
 })
 
@@ -435,6 +435,15 @@ var sell = function (user, sale, callback) {
 	} else {
 		throw Error("unknown type.")
 	}
+
+}
+
+
+
+
+// withdraw a set amount of bitcoin to a bitcoin wallet.
+
+var withdraw = function (user, withdrawal, callback) {
 
 }
 
