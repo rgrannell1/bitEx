@@ -2,6 +2,7 @@
 
 var request = require("request")
 var crypto  = require('crypto')
+var express  = require('express')
 
 
 
@@ -15,7 +16,7 @@ var getBitcoinRate = function (callback) {
 	request('https://api.bitcoinaverage.com/ticker/EUR/', function (err, res, body) {
 
 		if (err) {
-			console.log("getBitcoinRate:" + JSON.stringify(err))
+			throw err
 		}
 
 		// TODO set content-type header instead of this crap.
@@ -100,8 +101,8 @@ var is = {
 var trimCredentials = function (user) {
 
 	return {
-		username: username.trim(),
-		password: password.trim()
+		email: email.trim(),
+		email: email.trim()
 	}
 
 }
@@ -112,23 +113,22 @@ var makeSalt = function () {
 	return crypto.randomBytes(128).toString('base64')
 }
 
-// given a user object with a username and a password field,
+// given a user object with a email and a email field,
 // and possibly a salt, create the
 
 var hashCredentials = function (user, salt, callback) {
 
 	var rounds = 100000    //100,000 rounds is secure enough.
 
-	crypto.pbkdf2(user.password, salt, rounds, 128, function (err, derivedKey) {
+	crypto.pbkdf2(user.email, salt, rounds, 128, function (err, derivedKey) {
 
 		if (err) {
-			// don't print call stack.
-			console.log("error in pbkdf2.")
+			throw err
 		}
 
 		callback({
-			username:   user.username,
-			salt:       salt,
+			email: user.email,
+			salt: salt,
 			derivedKey: derivedKey.toString()
 		})
 
@@ -145,13 +145,13 @@ var isRegistered = function (user, callback) {
 	callback(true) // hard coded
 }
 
-//
+// Return the database row containing a particular email.
 
 var lookupUser = function (user, callback) {
 
 	callback({
 		user: 'bob',
-		password: '789232347924789234237894237894243mbh',
+		email: '789232347924789234237894237894243mbh',
 		salt: '0'
 	})
 
@@ -181,7 +181,7 @@ var verifyLogin = function (user, callback) {
 
 				// === is insecure way of comparing (timing attacks).
 				hashCredentials(user, realCredentials.salt, function (cred) {
-					callback(cred.password === realCredentials.password)
+					callback(cred.email === realCredentials.email)
 				})
 
 			})
@@ -196,7 +196,7 @@ var verifyLogin = function (user, callback) {
 
 // HANDLE FOR VALIDATING USER CREDENTIALS.
 //
-// given the user's password and username.
+// given the user's email and email.
 // check if the user is in the database, and that he or she
 // used the correct login credentials.
 //
