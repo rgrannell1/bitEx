@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
 var express = require("express")
-var cookieParser = require("cooker-parser")
+var cookieParser = require("cookie-parser")
 var bodyParser = require("body-parser")
-
-// sessions
-app.use(cookieParser("dsjsadjsadljasldsfjsaautdeayu"))
 
 var request = require("request")
 var crypto  = require('crypto')
@@ -16,6 +13,9 @@ var app = express()
 
 // parse request body data
 app.use(bodyParser.json())
+
+// store user sessions
+app.use(cookieParser("dsjsadjsadljasldsfjsaautdeayu"))
 
 
 
