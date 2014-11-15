@@ -1,6 +1,7 @@
 {
 	"name": "coinise",
 	"dependencies": {
-		"request": "*"
+		"request": "*",
+		"is": "rgrannell1/is"
 	}
 }

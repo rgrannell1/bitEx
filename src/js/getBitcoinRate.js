@@ -3,6 +3,11 @@
 var request = require("request")
 
 
+
+
+
+// get the current exchange rate for bitcoin in euros per bitcoin.
+
 var getBitcoinRate = function (callback) {
 
 	request('https://api.bitcoinaverage.com/ticker/EUR/', function (err, res, body) {
