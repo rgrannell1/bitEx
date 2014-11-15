@@ -1,5 +1,5 @@
 
-var is     = require('is')
+var is     = require('./is')
 var crypto = require('crypto')
 
 
@@ -115,9 +115,12 @@ var user = {
 	password: "password12345"
 }
 
-
-
-
+// given the user's password and username.
+// check if the user is in the database, and that he or she
+// used the correct login credentials.
+//
+// if they did, call the success callback on their credentials. If the
+// credentials were bad, call the failure callback on their credentials.
 
 var signin = function (user, success, failure) {
 
@@ -126,3 +129,8 @@ var signin = function (user, success, failure) {
 	})
 
 }
+
+
+
+
+signin(user, console.log, console.log)
