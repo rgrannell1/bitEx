@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
 var express = require("express")
+var cookieParser = require("cooker-parser")
 var bodyParser = require("body-parser")
+
+// sessions
+app.use(cookieParser("dsjsadjsadljasldsfjsaautdeayu"))
 
 var request = require("request")
 var crypto  = require('crypto')
@@ -206,10 +210,10 @@ var verifyLogin = function (user, callback) {
 // if they did, call the success callback on their credentials. If the
 // credentials were bad, call the failure callback on their credentials.
 
-var signin = function (user, res, success, failure) {
+var signin = function (user, reqRes, success, failure) {
 
 	verifyLogin(user, function (isValid) {
-		isValid ? success(res, user): failure(res, user)
+		isValid ? success(reqRes, user): failure(reqRes, user)
 	})
 
 }
@@ -221,12 +225,18 @@ var register = function (user, res, success, failure) {
 // VIEW RESOLVERS FOR SIGNIN
 var signinView = ( function() {
 
-	var success = function(res, user) {
-		return 'success';
+	var success = function(resRep, user) {
+		
+		var req = resRep.req
+	
+		// store user session
+		req.session.user = user
+
+		return 'success'
 	}
 
-	var failure = function(res, user) {
-		return 'failure';
+	var failure = function(resRep, user) {
+		return 'failure'
 	}
 
 	return {
@@ -235,6 +245,18 @@ var signinView = ( function() {
 	}
 
 } )()
+
+// mock signin
+var mockSigninView = signinView;
+mockSigninView.success = function(reqRes, user) {
+	
+	var req = resRep.req
+		
+	// store user session
+	req.session.user = user
+
+	res.send("user = " + req.session.user)
+}
 
 // VIEW RESOLVERS FOR SIGNIN
 var registerView = ( function() {
@@ -275,7 +297,12 @@ app.post('/signin', function(req, res) {
 		'password': credentials.password
 	}
 
-	signin(user, res, signinView.success, signinView.failure)
+	var resRep = {
+		'res': res,
+		'req': req
+	}
+
+	signin(user, resRep, mockSigninView.success, mockSigninView.failure)
 })
 
 // REGISTRATION REQUEST FROM CLIENT
@@ -440,6 +467,13 @@ var sell = function (user, sale, callback) {
 
 
 
+//buy(user, purchase, console.log)
+//sell(user, sale, console.log)
 
-buy(user, purchase, console.log)
-sell(user, sale, console.log)
+app.post('buy', function(req, res) {
+
+	// user id
+	var purchase = req.body.purchase
+
+	/// buy(user, purchase, console.log)
+})

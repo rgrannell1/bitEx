@@ -9,6 +9,7 @@
     "angular-route": "1.3.2",
     "lodash": "2.4.1",
     "request": "2.48.0",
-    "body-parser": "*"
+    "body-parser": "*",
+    "cookie-parser": "*"
   }
 }
