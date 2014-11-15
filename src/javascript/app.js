@@ -258,6 +258,13 @@ var registerView = ( function() {
 } )()
 
 
+//
+//
+//			Client API
+//
+//
+//
+
 // SIGN IN REQUEST FROM CLIENT
 //
 // takes the clients email & password
@@ -289,6 +296,20 @@ app.post('/register', function(req, res) {
 	}
 
 	register(user, res, registerView.success, registerView.failure)
+})
+
+// home page / promo page view
+app.get('/', function(req, res) {
+	res.sendFile( __dirname + '/views/index.html')
+})
+
+// load resources such as js, css & image files
+app.get('/resources/:type/:sub/:file', function(req, res) {
+	
+	var params = req.params
+	var dPath = params.type + '/' + params.sub + '/' + params.file
+	
+	res.sendFile(__dirname + '/client/resources/' + dPath)
 })
 
 app.listen(8080)
