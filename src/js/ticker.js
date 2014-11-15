@@ -1,37 +1,24 @@
 #!/usr/bin/env node
 
-
-
-
-
-var http = require("http")
-var https = require("https")
 var request = require("request")
 
 
+var getBitcoinRate = function (callback) {
 
-
-var getBitcoinRate = function () {
-
-	request('https://www.bitstamp.net/api/ticker', function (err, res, body) {
+	request('https://api.bitcoinaverage.com/ticker/EUR/', function (err, res, body) {
 
 		if (err) {
-			console.log("getBitcoinRate: ")
+			console.log("getBitcoinRate:" + JSON.stringify(err))
 		}
 
-		if (res.statusCode === 200) {
-			return {
-				price: body.last,
-			}
-		}
+		// todo set application content type instead.
+		body = JSON.parse(body)
+
+		callback({
+			price: body.last,
+			time:  (new Date).getTime()
+
+		})
 
 	})
 }
-
-
-
-
-
-
-console.log(getBitcoinRate())
-
