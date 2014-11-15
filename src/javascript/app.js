@@ -291,6 +291,7 @@ app.post('/register', function(req, res) {
 })
 
 app.listen(8080)
+console.log("listening on port 8080")
 
 
 
@@ -298,10 +299,79 @@ app.listen(8080)
 
 
 
-var buy = function (user, order, callback) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var user = {
+	'email': 'spendthrift@example.com',
+	'password': 'dollah'
+}
+
+var purchase = {
+	'type': 'euro',
+	'quantity': 100
+}
+
+
+
+
+
+var buy = function (user, purchase, callback) {
+
+	if (purchase.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = purchase.quantity
+			var amount = euros / rate // bitcoin can be a float.
+
+			console.log(amount)
+
+		})
+
+	} else if (purchase.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var amount = purchase.quantity
+			var euros  = amount * rate
+
+			console.log(amount)
+
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
 
 }
 
-var sell = function (user, order, callback) {
+var sell = function (user, sale, callback) {
 
 }
+
+
+
+
+
+buy(user, purchase, console.log)
