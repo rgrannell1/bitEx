@@ -96,6 +96,17 @@ var is = {
 	}
 }
 
+var views = (function() {
+
+	var base = __dirname + '/views'
+
+	return {
+		'index': base + '/index.html',
+		'dashboard': base + '/dashboard.html'
+	}
+
+})()
+
 
 
 
@@ -205,11 +216,14 @@ var verifyLogin = function (user, callback) {
 }
 
 // CREATE SESSION FOR THE USER SIGN IN
-var createUserSession = function(user, req) {
-	// store user session
-	var session = req.signedCookies
-	session.user = user
+// TODO: could this be stored on server with reference?
+var createUserSession = function(user, res) {
+	res.cookie('user', user, { 'signed': true })
+}
 
+
+// VERIFY USER SESSION HAS BEEN SET
+var hasUserSession = function(req) {
 	return !!req.signedCookies.user
 }
 
@@ -226,15 +240,13 @@ var createUserSession = function(user, req) {
 var signin = function (user, reqRes, success, failure) {
 
 	verifyLogin(user, function (isValid) {
+
+		createUserSession(user, reqRes.res)
 		
 		if(isValid) {
-
-			// add user session
-			if(createUserSession(user, reqRes.req)) {
-				success(user, reqRes)
-			} else {
-				failure(user, reqRes)
-			}
+			success(user, reqRes)
+		} else {
+			failure(user, reqRes)
 		}
 	})
 
@@ -248,11 +260,11 @@ var register = function (user, res, success, failure) {
 var signinView = ( function() {
 
 	var failure = function(user, reqRes) {
-		reqRes.res.redirect("/")
+		reqRes.res.redirect('/')
 	}
 
 	var success = function(user, reqRes) {
-		reqRes.res.send("user signed in")
+		reqRes.res.redirect('/dashboard')
 	}
 
 	return {
@@ -282,12 +294,13 @@ var registerView = ( function() {
 } )()
 
 
+
+
+/*****************************************************/
 //
+//					Client API
 //
-//			Client API
-//
-//
-//
+/******************************************************/
 
 // SIGN IN REQUEST FROM CLIENT
 //
@@ -329,7 +342,22 @@ app.post('/register', function(req, res) {
 
 // home page / promo page view
 app.get('/', function(req, res) {
-	res.sendFile( __dirname + '/views/index.html')
+	
+	if(hasUserSession(req)) {
+		res.redirect('/dashboard')
+	} else {
+		res.sendFile(views.index)
+	}
+})
+
+// user dashboard for buy, sell & withdraw actions
+app.get('/dashboard', function(req, res) {
+	
+	if(hasUserSession(req)) {
+		res.sendFile(views.dashboard) 
+	} else {
+		res.redirect('/')
+	}
 })
 
 // load resources such as js, css & image files
@@ -339,6 +367,11 @@ app.get('/resources/:type/:sub/:file', function(req, res) {
 	var dPath = params.type + '/' + params.sub + '/' + params.file
 
 	res.sendFile(__dirname + '/client/resources/' + dPath)
+})
+
+// angular templates
+app.get('/templates/:file', function(req, res) {
+	res.sendFile(__dirname + '/views/templates/' + req.params.file)
 })
 
 app.listen(8080)
