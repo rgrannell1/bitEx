@@ -123,7 +123,7 @@ var trimCredentials = function (user) {
 // return a random salt.
 
 var makeSalt = function () {
-	return crypto.randomBytes(128).toString('base64')
+	return crypto.randomBytes(16).toString('base64')
 }
 
 // given a user object with a email and a password field,
@@ -133,7 +133,7 @@ var hashCredentials = function (user, salt, callback) {
 
 	var rounds = 100000    //100,000 rounds is secure enough.
 
-	crypto.pbkdf2(user.email, salt, rounds, 128, function (err, derivedKey) {
+	crypto.pbkdf2(user.email, salt, rounds, 16, function (err, derivedKey) {
 
 		if (err) {
 			throw err
