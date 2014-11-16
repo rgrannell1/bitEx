@@ -45,6 +45,7 @@
 					<li><a href="">Buy</a></li>
 					<li><a href="">Sell</a></li>
 					<li><a href="">Withdraw</a></li>
+					<li><a href="" id="price"></a></li>
 					<li><a href="">Sign In</a></li>
 					<li><a href="">Sign Up</a></li>
 				</ul>
@@ -128,6 +129,19 @@
 		$('#register').hide()
 		$('#signin').show()
 	})
+
+	var updateBitcoinPrice = function () {
+
+		$.get('https://api.bitcoinaverage.com/ticker/EUR/', function (data) {
+			$('#price').text("Price: €" + data.last)
+
+		})
+
+	}
+
+	updateBitcoinPrice()
+	var pid = setInterval(updateBitcoinPrice(), 60 * 1000)
+
 
 </script>
 </html>
