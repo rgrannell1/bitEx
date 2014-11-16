@@ -108,10 +108,103 @@ var views = (function() {
 })()
 
 
+var user = {
+	'email': 'spendthrift@example.com',
+	'password': 'dollah'
+}
+
+var purchase = sale = {
+	'type': 'euro',
+	'quantity': 75
+}
+
+
+
+var databaseBuy = function (user, purchase, callback) {
+	// move coin around, deduct balances.
+	callback("something happened.")
+}
+
+var databaseSell = function (user, sale, callback) {
+	// move coin around, deduct balances.
+	callback("something else happened.")
+}
+
+var buy = function (user, purchase, callback) {
+
+	if (purchase.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = purchase.quantity
+			var quantity = euros / rate.price // bitcoin can be a float.
+
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
+
+		})
+
+	} else if (purchase.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var quantity = purchase.quantity
+			var euros  = quantity * rate.price
+
+			// do something with price.
+
+			databaseBuy(user, {
+				quantity: quantity
+			}, callback)
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
+
+}
 
 
 
 
+
+var sell = function (user, sale, callback) {
+
+	if (sale.type === 'euro') {
+
+		getBitcoinRate(function (rate) {
+
+			var euros  = sale.quantity
+			var quantity = euros / rate.price // bitcoin can be a float.
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+
+		})
+
+	} else if (sale.type === 'bitcoin') {
+
+		getBitcoinRate(function (rate) {
+
+			var quantity = sale.quantity
+			var euros  = quantity * rate.price
+
+			// do something with price (send to UI)
+
+			databaseSell(user, {
+				quantity: quantity
+			}, callback)
+		})
+
+
+	} else {
+		throw Error("unknown type.")
+	}
+
+}
 
 
 
@@ -374,135 +467,6 @@ app.get('/templates/:file', function(req, res) {
 	res.sendFile(__dirname + '/views/templates/' + req.params.file)
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var user = {
-	'email': 'spendthrift@example.com',
-	'password': 'dollah'
-}
-
-var purchase = sale = {
-	'type': 'euro',
-	'quantity': 75
-}
-
-
-
-var databaseBuy = function (user, purchase, callback) {
-	// move coin around, deduct balances.
-	callback("something happened.")
-}
-
-var databaseSell = function (user, sale, callback) {
-	// move coin around, deduct balances.
-	callback("something else happened.")
-}
-
-var buy = function (user, purchase, callback) {
-
-	if (purchase.type === 'euro') {
-
-		getBitcoinRate(function (rate) {
-
-			var euros  = purchase.quantity
-			var quantity = euros / rate.price // bitcoin can be a float.
-
-			databaseBuy(user, {
-				quantity: quantity
-			}, callback)
-
-		})
-
-	} else if (purchase.type === 'bitcoin') {
-
-		getBitcoinRate(function (rate) {
-
-			var quantity = purchase.quantity
-			var euros  = quantity * rate.price
-
-			// do something with price.
-
-			databaseBuy(user, {
-				quantity: quantity
-			}, callback)
-		})
-
-
-	} else {
-		throw Error("unknown type.")
-	}
-
-}
-
-
-
-
-
-var sell = function (user, sale, callback) {
-
-	if (sale.type === 'euro') {
-
-		getBitcoinRate(function (rate) {
-
-			var euros  = sale.quantity
-			var quantity = euros / rate.price // bitcoin can be a float.
-
-			databaseSell(user, {
-				quantity: quantity
-			}, callback)
-
-		})
-
-	} else if (sale.type === 'bitcoin') {
-
-		getBitcoinRate(function (rate) {
-
-			var quantity = sale.quantity
-			var euros  = quantity * rate.price
-
-			// do something with price (send to UI)
-
-			databaseSell(user, {
-				quantity: quantity
-			}, callback)
-		})
-
-
-	} else {
-		throw Error("unknown type.")
-	}
-
-}
-
-
-
 //buy(user, purchase, console.log)
 //sell(user, sale, console.log)
 
@@ -523,7 +487,7 @@ var withdraw = function (user, withdrawal, callback) {
 
 
 // TO SIGN IN PAGE
-app.get('signin', function(req, res) {
+app.get('signup', function(req, res) {
 	res.sendFile(__dirname + '/views/signin.html')
 })
 
@@ -547,6 +511,7 @@ app.get('toEUR/:quantity', function(req, res) {
 			res.send(amount)
 	})
 })
+
 
 app.listen(8080)
 console.log("listening on port 8080")
