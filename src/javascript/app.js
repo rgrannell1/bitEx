@@ -374,8 +374,6 @@ app.get('/templates/:file', function(req, res) {
 	res.sendFile(__dirname + '/views/templates/' + req.params.file)
 })
 
-app.listen(8080)
-console.log("listening on port 8080")
 
 
 
@@ -514,15 +512,41 @@ app.post('buy', function(req, res) {
 	var purchase = req.body.purchase
 
 	/// buy(user, purchase, console.log)
+
+	res.send('0.0161')
 })
 // withdraw a set amount of bitcoin to a bitcoin wallet.
 
 var withdraw = function (user, withdrawal, callback) {
-
+	// todo
 }
 
 
+// TO SIGN IN PAGE
+app.get('signin', function(req, res) {
+	res.sendFile(__dirname + '/views/signin.html')
+})
 
 
 buy(user, purchase, console.log)
 sell(user, sale, console.log)
+
+
+
+// BUY / SELL conversions
+app.get('toBTC/:quantity', function(req, res) {
+	getBitcoinRate(function (rate) {
+			var amount = req.params.quantity / rate.price
+			res.send(amount)
+	})
+})
+
+app.get('toEUR/:quantity', function(req, res) {
+	getBitcoinRate(function (rate) {
+			var amount = req.params.quantity * rate.price
+			res.send(amount)
+	})
+})
+
+app.listen(8080)
+console.log("listening on port 8080")
