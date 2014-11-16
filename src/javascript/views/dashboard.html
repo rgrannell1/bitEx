@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head lang="en" ng-app>
+<head lang="en" ng-app="coinise">
 	<meta charset="UTF-8">
 	<meta viewport content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -12,7 +12,77 @@
 	<script src="/resources/js/vendor/lodash.js"></script>
 	<script src="/resources/js/vendor/angular.js"></script>
 	<script src="/resources/js/vendor/angular-route.js"></script>
+	<script src="/resources/js/custom/coiniseControllers.js"></script>
+	<script>
+	var coinise = angular.module('coinise', ['ngRoute', 'coiniseControllers']);
 
+	coinise.config(['$routeProvider', 
+		
+		function($routeProvider) {
+
+			$routeProvider.when('/buy', {
+				'controller': 'buyController',
+				'templateUrl': 'templates/buy.html'
+			}).when('/sell', {
+				'controller': 'sellController',
+				'templateUrl': 'templates/sell.html'
+			}).when('/withdraw', {
+				'controller': 'withdrawController',
+				'templateUrl': 'templates/withdraw.html'
+			}).otherwise({
+				'redirectTo': '/dashboard'
+			})	
+		}
+	]);
+</script>
+<style>
+
+	.html {
+		font-size: 16px;
+	}
+
+	.body {
+		font-size: 100%;
+		line-height: 1.5em;
+	}
+
+	#feature-options li a {
+		color: #555555;
+	}
+
+	.hideable {
+		display: none;
+	}
+
+	.hideable.active {
+		display: block;
+	}
+
+	#feature-body .page-header {
+		border-bottom: 2px solid #EEE;
+	}
+
+	#my-dashboard .panel.panel-default {
+		min-height: 800px;
+	}
+
+	#offers {
+		text-align: center;
+	}
+
+	.bloat {
+		padding: 20px;
+		margin-bottom: 20px;
+		border: 1px solid rgba(0, 0, 0, 0.1);	
+	}
+
+	.bloat:after {
+		clear: both;	
+	}
+
+
+
+</style>
 </head>
 <body>
 	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
@@ -21,76 +91,166 @@
 
 			<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="">Buy</a></li>
-					<li><a href="">Sell</a></li>
-					<li><a href="">Withdraw</a></li>
-					<li><a href="">Sign In</a></li>
-					<li><a href="">Sign Up</a></li>
+					<li><a id="buy-nav" href="#/buy">Buy</a></li>
+					<li><a id="sell-nav" href="">Sell</a></li>
+					<li><a id="withdraw-nav" href="">Withdraw</a></li>
+					<li><a id="sign-out" href="">Sign Out</a></li>
 				</ul>
 			</div>
-
 		</div>
 	</nav>
 	<main>
-		<div class="container-fluid">
-			<div class="col-md-3">
-				<section id="my-dashboard">
-					<header>
-						<h1 class="page-header">My Dashboard</h1>
-					</header>
-						<aside>
-							<nav id="feature-options">
-								<ul class="list-group">
-									<li class="list-group-item">
-										<a href="#buy">Buy</a>
-									</li>
-									<li class="list-group-item">
-										<a href="#sell">Sell</a>
-									</li>
-									<li class="list-group-item">
-										<a href="#withdraw">Withdraw</a>
-									</li>
-								</ul>
-							</nav>
-						</aside>
-					<div clas="col-md-9">
-						<div ng-view></div>
+		<section id="my-dashboard">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 col-md-offset-4">
+						<div class="bloat">
+							<ul id="offers" class="list-inline">
+								<li id="offer-buy"><b>Buy Price: </b><span>xxx</span></li>
+								<li id="offer-sell"><b>Sell Price: </b><span>yyy</span></li>
+							</ul>
+						</div>
 					</div>
-				</section>
+					<script>
+
+						$(document).ready(function() {
+
+							$.ajax({
+								'url': /''
+							})
+						});
+					</script>
+				</div>
 			</div>
-		</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<header>
+									<div class="page-header">
+										<h1>
+											Dashboard
+										</h1>
+									</div>
+								</header>
+									<div class="row">
+										<div class="col-md-3">
+											<aside>
+												<nav id="feature-options">
+													<ul class="list-group">
+														<li id="my-wallet" class="list-group-item">
+															<a href="#buy" class="active">My Wallet</a>
+														</li>
+														<li id="my-eurwallet" class="list-group-item">
+															<a href="#buy">My Eur Wallet</a>
+														</li>
+														<li id="buy" class="list-group-item">
+															<a href="#buy">Buy</a>
+														</li>
+														<li id="sell" class="list-group-item">
+															<a href="#sell">Sell</a>
+														</li>
+														<li id="withdraw" class="list-group-item">
+															<a href="#withdraw">Withdraw</a>
+														</li>
+													</ul>
+												</nav>
+											</aside>
+										</div>
+										<div class="col-md-9">
+											<div id="feature-body">
+												<div id="my-wallet-body" class="hideable active">
+													<header>
+														<div class="page-header">
+															<h1>My Wallet
+															<small>Your BTC wallet</small>
+															</h1>
+														</div>
+													</header>
+													<div class="row">
+														<div class="col-md-8 col-md-offset-2">
+														</div>
+													</div>
+												</div>
+												<div id="my-eurwallet-body" class="hideable">
+													<header>
+														<div class="page-header">
+															<h1>Euro Wallet
+															<small>Your Euro Wallet</small>
+															</h1>
+														</div>
+													</header>
+													<div class="row">
+														<div class="col-md-8 col-md-offset-2">
+														</div>
+													</div>
+												</div>
+												<div id="buy-body" class="hideable">
+													<header>
+														<div class="page-header">
+															<h1>Buy Bitcoin
+															<small>Euro into Bitcoin</small>
+															</h1>
+														</div>
+													</header>
+													<div class="row">
+														<div class="col-md-8 col-md-offset-2">
+														</div>
+													</div>
+												</div>
+												<div id="sell-body" class="hideable">
+													<header>
+														<div class="page-header">
+															<h1>Sell Bitcoin
+															<small>Bitcoin into Euro</small> 
+															</h1>
+														</div>
+													</header>
+													<div class="row">
+														<div class="col-md-8 col-md-offset-2">
+														</div>
+													</div>
+												</div>
+												<div id="withdraw-body" class="hideable">
+													<header>
+														<div class="page-header">
+															<h1>Withdraw
+																<small>To your Bitcoin wallet</small>
+															</h1>
+														</div>
+													</header>
+													<div class="row">
+														<div class="col-md-8 col-md-offset-2">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</section>
 	</main>
+	<script>
+
+		'use strict';
+
+		$('#feature-options').find('li').click(function(event) {
+			event.preventDefault();
+
+			var id = $(this).attr('id')
+
+			console.log(id)
+
+			var featureBody = $('#feature-body')
+
+			$(featureBody).find('div.active').removeClass('active')
+			$(featureBody).find('#' + id + '-body').addClass('active')
+		})
+	</script>
 </body>
-
-<script src="/resources/js/custom/coiniseControllers.js"></script>
-<script>
-	var coinise = angular.module('coinise', ['ngRoute', 'coiniseControllers']);
-
-	coinise.config(['$routeProvider', 
-		
-		function($routeProvider) {
-
-			$routeProvider
-
-			.when('/buy', {
-				'controller': 'buyController',
-				'templateUrl': 'templates/buy.html'
-			})
-
-			.when('/sell', {
-				'controller': 'sellController',
-				'templateUrl': 'templates/sell.html'
-			})
-
-			.when('/withdraw', {
-				'controller': 'withdrawController',
-				'templateUrl': 'templates/withdraw.html'
-			})
-
-			.otherwise({
-				'redirectTo': '/dashboard'
-			})	
-		}
-	])
-</script>
 </html>
