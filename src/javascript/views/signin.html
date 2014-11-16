@@ -58,6 +58,15 @@
 			padding-bottom: 60px;
 		}
 
+		#price {
+			padding: 0px;
+		}
+
+
+		#price p {
+			padding: 0px;
+			margin:  0px;
+		}
 
 	</style>
 
@@ -163,7 +172,6 @@
 
 		$.get('https://api.bitcoinaverage.com/ticker/EUR/', function (data) {
 			$('#price').text("Price: €" + data.last)
-
 		})
 
 	}
