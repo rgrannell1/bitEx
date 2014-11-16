@@ -48,7 +48,6 @@
 			padding-bottom: 60px;
 		}
 
-
 	</style>
 
 </head>
@@ -72,64 +71,43 @@
 	</nav>
 
 	<div class="container">
+
 		<div class="row">
-			<div class="col-md-4 col-md-offset-4">
+			<div class="col-md-4 col-md-offset-4 text-center">
+				<h1>Coinise</h1>
+				<p> The Irish Bitcoin Exchange.</p>
 
-				<div class="well">
-					<div id="register">
+				<button class="btn btn-lg btn-primary" type="button" id="front-register">Sign Up</button>
 
-						<h3 class="form-heading">Register</h3>
-
-						<form class="form-main" role="form">
-
-							<div class="input-group">
-								<input type="text" class="form-control" spellcheck="false" value="" id="forename" name="forename" placeholder="Forename" autofocus>
-							</div>
-
-							<div class="input-group">
-								<input type="text" class="form-control" spellcheck="false" value="" id="sirname" name="sirname" placeholder="Sirname">
-							</div>
-
-							<div class="input-group">
-								<input type="email" class="form-control" spellcheck="false" value="" id="email" name="email" placeholder="Email">
-							</div>
-
-							<div class="input-group">
-								<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
-							</div>
-
-							<button class="btn btn-lg btn-primary" type="button" id="get-details">Register</button>
-
-						</form>
-
-						Already have an account? <a id="signin-link" href="#register">Register</a>
-
-					</div>
-
-					<div id="signin">
-
-						<h3 class="form-heading">Sign In</h3>
-
-						<form class="form-main" role="form" method="post" action="/signin">
-
-							<div class="input-group">
-								<input type="email" class="form-control" spellcheck="false" value="" id="email" name="email" placeholder="Email" autofocus>
-							</div>
-
-							<div class="input-group">
-								<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
-							</div>
-
-							<button class="btn btn-lg btn-primary" type="submit" id="get-password">Sign In</button>
-
-						</form>
-
-						Don't have an account? <a href="#signin" id="register-link">Sign up</a>
-
-					</div>
-
-				</div>
 			</div>
+
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-4 text-center">
+
+				<h2>Irish</h2>
+				<p>As the only Irish bitcoin exchange, Coinise sells and buys Bitcoin instantly. </p>
+
+			</div>
+
+			<div class="col-md-4 text-center">
+
+				<h2>Instant Transfers</h2>
+				<p>Banks take days to transfer cash. Bitcoin transfers instantly.</p>
+
+			</div>
+
+			<div class="col-md-4 text-center">
+
+				<h3>Secure</h3>
+				<p>Coinise never asks for your bank details.</p>
+
+			</div>
+
+
+
 		</div>
 	</div>
 
@@ -216,6 +194,9 @@
 	updateBitcoinPrice()
 	var pid = setInterval(updateBitcoinPrice(), 60 * 1000)
 
+	$("#front-register").on("click", function () {
+		window.location = window.location += "views/signin.html"
+	})
 
 </script>
 </html>
