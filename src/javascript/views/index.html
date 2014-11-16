@@ -11,6 +11,9 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="/resources/css/custom/override.css">
 
 	<style type="text/css">
 
@@ -44,8 +47,54 @@
 		footer {
 			margin-top:  60px;
 			padding-top: 40px;
-			border-top: 1px solid #dee0e6;
 			padding-bottom: 60px;
+
+		}
+
+		#splash-main {
+			margin-top: 100px;
+			margin-bottom: 100px;
+			padding-bottom: 100px;
+			color: white;
+		}
+
+		#splash-main h1 {
+			font-size: 4.23em;
+		}
+
+		#splash-main p {
+			font-size: 1.618em	;
+		}
+
+		.fa {
+			margin-top: 20px;
+			font-size: 4em;
+		}
+
+		#exposition {
+			padding-top: 100px;
+			padding-bottom: 100px;
+			border-bottom: 1px solid #dee0e6;
+		}
+
+
+		#banner {
+			position: absolute;
+			left: 0px;
+			top:  0px;
+			width: 100%;
+			height: 550px;
+		}
+
+		body {
+			background-image: url("/resources/imgs/custom/banner.png");
+			background-size: auto 550px;
+			background-repeat: no-repeat;
+			     background-clip: content-box;
+		}
+
+		em {
+			font-style: bold
 		}
 
 	</style>
@@ -72,7 +121,7 @@
 
 	<div class="container">
 
-		<div class="row">
+		<div class="row" id="splash-main">
 			<div class="col-md-4 col-md-offset-4 text-center">
 				<h1>Coinise</h1>
 				<p> The Irish Bitcoin Exchange.</p>
@@ -80,29 +129,49 @@
 				<button class="btn btn-lg btn-primary" type="button" id="front-register">Sign Up</button>
 
 			</div>
-
-
 		</div>
 
-		<div class="row">
-			<div class="col-md-4 text-center">
+		<div class="row" id="exposition">
+			<div class="col-md-4 ">
 
-				<h2>Irish</h2>
-				<p>As the only Irish bitcoin exchange, Coinise sells and buys Bitcoin instantly. </p>
+				<div class="row">
+					<div class="col-md-2">
+						<i class="fa fa-flag"></i>
+					</div>
+					<div class="col-md-10">
+						<h2>Irish</h2>
+						<p>Irish customers can buy and sell Bitcoin on Coinise instantly. </p>
+					</div>
+				</div>
 
 			</div>
 
-			<div class="col-md-4 text-center">
+			<div class="col-md-4 ">
 
-				<h2>Instant Transfers</h2>
-				<p>Banks take days to transfer cash. Bitcoin transfers instantly.</p>
+				<div class="row">
+					<div class="col-md-2">
+						<i class="fa fa-bolt"></i>
+					</div>
+					<div class="col-md-10">
+						<h2>Instant Free Transfers</h2>
+						<p>Banks take days to transfer cash. Bitcoin transfers instantly with no transaction fees.</p>
+					</div>
+				</div>
+
 
 			</div>
 
-			<div class="col-md-4 text-center">
+			<div class="col-md-4 ">
 
-				<h3>Secure</h3>
-				<p>Coinise never asks for your bank details.</p>
+				<div class="row">
+					<div class="col-md-2">
+						<i class="fa fa-key"></i>
+					</div>
+					<div class="col-md-10">
+						<h3>Secure</h3>
+						<p>Coinise never asks for your bank details.</p>
+					</div>
+				</div>
 
 			</div>
 
@@ -185,8 +254,7 @@
 	var updateBitcoinPrice = function () {
 
 		$.get('https://api.bitcoinaverage.com/ticker/EUR/', function (data) {
-			$('#price').text("Price: €" + data.last)
-
+			$('#price').html("<p>Price: <strong>€" + data.last + "</strong></p>")
 		})
 
 	}
