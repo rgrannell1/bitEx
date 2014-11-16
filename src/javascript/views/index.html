@@ -92,6 +92,9 @@
 			     background-clip: content-box;
 		}
 
+		em {
+			font-style: bold
+		}
 
 	</style>
 
@@ -250,8 +253,7 @@
 	var updateBitcoinPrice = function () {
 
 		$.get('https://api.bitcoinaverage.com/ticker/EUR/', function (data) {
-			$('#price').text("Price: €" + data.last)
-
+			$('#price').html("<p>Price: <strong>€" + data.last + "</strong></p>")
 		})
 
 	}
