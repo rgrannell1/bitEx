@@ -479,15 +479,9 @@ app.post('buy', function(req, res) {
 
 	res.send('0.0161')
 })
-// withdraw a set amount of bitcoin to a bitcoin wallet.
-
-var withdraw = function (user, withdrawal, callback) {
-	// todo
-}
-
 
 // TO SIGN IN PAGE
-app.get('signup', function(req, res) {
+app.get('/signin', function(req, res) {
 	res.sendFile(__dirname + '/views/signin.html')
 })
 
