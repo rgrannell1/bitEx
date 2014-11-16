@@ -96,6 +96,17 @@ var is = {
 	}
 }
 
+var views = (function() {
+
+	var base = __dirname + '/views'
+
+	return {
+		'index': base + '/index.html',
+		'dashboard': base + '/dashboard.html'
+	}
+
+})()
+
 
 
 
@@ -322,16 +333,25 @@ app.post('/register', function(req, res) {
 	register(user, res, registerView.success, registerView.failure)
 })
 
+var hasUserSession = function(req) {
+	return !!req.signedCookies.user
+}
+
 // home page / promo page view
 app.get('/', function(req, res) {
-	res.sendFile( __dirname + '/views/index.html')
+	
+	if(hasUserSession(req)) {
+		res.redirect('/dashboard')
+	} else {
+		res.sendFile(views.index)
+	}
 })
 
 // user dashboard for buy, sell & withdraw actions
 app.get('/dashboard', function(req, res) {
-
-	if(req.signedCookies.user) {
-		res.sendFile(__dirname + '/views/dashboard.html')
+	
+	if(hasUserSession(req)) {
+		res.sendFile(views.dashboard) 
 	} else {
 		res.redirect('/')
 	}
