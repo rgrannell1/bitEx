@@ -495,14 +495,17 @@ sell(user, sale, console.log)
 app.get('/toBTC/:quantity', function(req, res) {
 	getBitcoinRate(function (rate) {
 			var amount = req.params.quantity / rate.price
-			res.send(amount)
+
+			console.log(amount)
+
+			res.json({ 'amount' : amount })
 	})
 })
 
 app.get('/toEUR/:quantity', function(req, res) {
 	getBitcoinRate(function (rate) {
 			var amount = req.params.quantity * rate.price
-			res.send(amount)
+			res.json({ 'amount' : amount })
 	})
 })
 

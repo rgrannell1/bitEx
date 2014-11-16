@@ -385,6 +385,7 @@
 
 
 		$('#buy-bitcoin-form').submit(function(event) {
+			
 			event.preventDefault();
 
 			var amount = $(this).find('input[name="amount"]').val();
@@ -392,14 +393,14 @@
 			$(this).find('button[type="submit"]').text('Buying Bitcoin')
 			$(this).find('button[type="submit"]').attr('disabled', true)
 
-			/*$.ajax({
+			$.ajax({
 				'url': '/buy',
 				'method': 'POST',
 				'data': { 'type': 'euro', 'quantity': amount }
 			}).done(function() {
 				$(this).find('button[type="submit"]').text('Buy Bitcoin')
 				$(this).attr('disabled', false)
-			})*/
+			})
 
 
 			// euro / bitcoin
@@ -451,7 +452,7 @@
 				'url': 'toEUR/' + newValue,
 				'method': 'GET'
 			}).done(function(btcVal) {
-				$(this).find('#exchanger-eur').val(btcVal)
+				$('#exchanger-eur').text(btcVal.amount)
 			})
 
 		});
@@ -461,11 +462,14 @@
 			
 			var newValue = $(this).val()
 
+			var scp = $(this);
+
 			$.ajax({
-				'url': 'toBTC/' + newValue,
+				'url': '/toBTC/' + newValue,
 				'method': 'GET'
 			}).done(function(btcVal) {
-				$(this).find('#exchanger-btc').val(btcVal)
+				console.log(btcVal);
+				$('#exchanger-btc').text(btcVal.amount)
 			})
 
 		});
