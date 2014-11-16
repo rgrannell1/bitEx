@@ -12,6 +12,45 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
 
+	<style type="text/css">
+
+		/* positioning css */
+
+		#get-details, #get-password {
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+
+		.form-heading {
+			margin-bottom: 20px;
+		}
+
+		.well {
+			margin-top: 20px;
+			padding-left:  50px;
+			padding-right: 50px;
+			padding-bottom: 30px;
+		}
+
+
+		footer nav ul {
+			padding: 0px;
+		}
+
+		footer nav a {
+			display: block
+		}
+
+		footer {
+			margin-top:  60px;
+			padding-top: 40px;
+			border-top: 1px solid #dee0e6;
+			padding-bottom: 60px;
+		}
+
+
+	</style>
+
 </head>
 <body>
 	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
@@ -23,6 +62,7 @@
 					<li><a href="">Buy</a></li>
 					<li><a href="">Sell</a></li>
 					<li><a href="">Withdraw</a></li>
+					<li><a href="" id="price"></a></li>
 					<li><a href="">Sign In</a></li>
 					<li><a href="">Sign Up</a></li>
 				</ul>
@@ -30,6 +70,7 @@
 
 		</div>
 	</nav>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
@@ -37,7 +78,7 @@
 				<div class="well">
 					<div id="register">
 
-						<h2>Register</h2>
+						<h3 class="form-heading">Register</h3>
 
 						<form class="form-main" role="form">
 
@@ -57,7 +98,7 @@
 								<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
 							</div>
 
-							<button class="btn btn-lg btn-primary" type="button" id="get-password">Register</button>
+							<button class="btn btn-lg btn-primary" type="button" id="get-details">Register</button>
 
 						</form>
 
@@ -67,7 +108,7 @@
 
 					<div id="signin">
 
-						<h2>Sign In</h2>
+						<h3 class="form-heading">Sign In</h3>
 
 						<form class="form-main" role="form" method="post" action="/signin">
 
@@ -86,10 +127,67 @@
 						Don't have an account? <a href="#signin" id="register-link">Sign up</a>
 
 					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<footer>
+		<div class="container">
+			<div class="row">
+
+				<div class="col-sm-2">
+					<h4>Coinise</h4>
+					<small> © 2014 Coinise</small>
+				</div>
+
+				<div class="col-sm-2">
+					<h4>About</h4>
+					<nav>
+						<ul>
+							<a href="#">About Us</a>
+							<a href="#">About Bitcoin</a>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="col-sm-2">
+					<h4>Legal</h4>
+					<nav>
+						<ul>
+							<a href="#">Terms Of Use</a>
+							<a href="#">Privacy Policy</a>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="col-sm-2">
+					<h4>Services</h4>
+					<nav>
+						<ul>
+							<a href="#">Buy Bitcoin</a>
+							<a href="#">Sell Bitcoin</a>
+							<a href="#">Withdraw Bitcoin</a>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="col-sm-2">
+					<h4>Social</h4>
+					<nav>
+						<ul>
+							<a href="#">Facebook</a>
+							<a href="#">Twitter</a>
+							<a href="#">Linkedin</a>
+						</ul>
+					</nav>
+				</div>
+
+			</div>
+		</div>
+	</footer>
+
 </body>
 <script type="text/javascript">
 
@@ -105,6 +203,19 @@
 		$('#register').hide()
 		$('#signin').show()
 	})
+
+	var updateBitcoinPrice = function () {
+
+		$.get('https://api.bitcoinaverage.com/ticker/EUR/', function (data) {
+			$('#price').text("Price: €" + data.last)
+
+		})
+
+	}
+
+	updateBitcoinPrice()
+	var pid = setInterval(updateBitcoinPrice(), 60 * 1000)
+
 
 </script>
 </html>
