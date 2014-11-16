@@ -5,32 +5,68 @@
 	<meta viewport content="width=device-width, initial-scale=1.0">
 	<title>Coinise</title>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="/resources/js/vendor/lodash.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
 
-
 </head>
 <body>
 
-	<form class="form-main" role="form">
+	<div class="container" id="register">
 
-		<div class="input-group">
-			<input type="text" class="form-control" spellcheck="false" value="" id="email" placeholder="Email" autofocus tabindex="1">
-		</div>
+		<h2>Register</h2>
 
-		<div class="input-group">
-			<input type="password" class="form-control" spellcheck="false" id="password" placeholder="Password" tabindex="2">
-		</div>
+		<form class="form-main" role="form">
 
-		<button class="btn btn-lg btn-primary btn-block" type="button" id="get-password" tabindex="3">
+			<div class="input-group">
+				<input type="text" class="form-control" spellcheck="false" value="" id="forename" name="forename" placeholder="Forename" autofocus>
+			</div>
 
-	</form>
+			<div class="input-group">
+				<input type="text" class="form-control" spellcheck="false" value="" id="sirname" name="sirname" placeholder="Sirname">
+			</div>
 
+			<div class="input-group">
+				<input type="email" class="form-control" spellcheck="false" value="" id="email" name="email" placeholder="Email">
+			</div>
+
+			<div class="input-group">
+				<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
+			</div>
+
+			<button class="btn btn-lg btn-primary" type="button" id="get-password">Register</button>
+
+		</form>
+
+		Already have an account? <a id="signin-link" href="#register">Sign in</a>
+
+	</div>
+
+	<div class="container" id="signin">
+
+		<h2>Sign In</h2>
+
+		<form class="form-main" role="form">
+
+			<div class="input-group">
+				<input type="email" class="form-control" spellcheck="false" value="" id="email" name="email" placeholder="Email" autofocus>
+			</div>
+
+			<div class="input-group">
+				<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
+			</div>
+
+			<button class="btn btn-lg btn-primary" type="button" id="get-password">Sign In</button>
+
+		</form>
+
+		Don't have an account? <a href="#signin" id="register-link">Sign up</a>
+
+	</div>
 
 </body>
 
@@ -54,8 +90,21 @@
 		*/
 	}
 
+	$('#register').hide()
+
 	$('#get-password').on('click', function (event) {
 		signinEvent()
+	})
+
+	$('#register-link').on('click', function (event) {
+		$('#signin').hide()
+		$('#register').show()
+
+	})
+
+	$('#signin-link').on('click', function (event) {
+		$('#register').hide()
+		$('#signin').show()
 	})
 
 </script>
