@@ -205,12 +205,9 @@ var verifyLogin = function (user, callback) {
 }
 
 // CREATE SESSION FOR THE USER SIGN IN
-var createUserSession = function(user, req) {
-	// store user session
-	var session = req.signedCookies
-	session.user = user
-
-	return !!req.signedCookies.user
+// TODO: could this be stored on server with reference?
+var createUserSession = function(user, res) {
+	res.cookie('user', user, { 'signed': true })
 }
 
 
@@ -226,15 +223,13 @@ var createUserSession = function(user, req) {
 var signin = function (user, reqRes, success, failure) {
 
 	verifyLogin(user, function (isValid) {
+
+		createUserSession(user, reqRes.res)
 		
 		if(isValid) {
-
-			// add user session
-			if(createUserSession(user, reqRes.req)) {
-				success(user, reqRes)
-			} else {
-				failure(user, reqRes)
-			}
+			success(user, reqRes)
+		} else {
+			failure(user, reqRes)
 		}
 	})
 
@@ -248,11 +243,11 @@ var register = function (user, res, success, failure) {
 var signinView = ( function() {
 
 	var failure = function(user, reqRes) {
-		reqRes.res.redirect("/")
+		reqRes.res.redirect('/')
 	}
 
 	var success = function(user, reqRes) {
-		reqRes.res.send("user signed in")
+		reqRes.res.redirect('/dashboard')
 	}
 
 	return {
@@ -330,6 +325,16 @@ app.post('/register', function(req, res) {
 // home page / promo page view
 app.get('/', function(req, res) {
 	res.sendFile( __dirname + '/views/index.html')
+})
+
+// user dashboard for buy, sell & withdraw actions
+app.get('/dashboard', function(req, res) {
+
+	if(req.signedCookies.user) {
+		res.sendFile(__dirname + '/views/dashboard.html')
+	} else {
+		res.redirect('/')
+	}
 })
 
 // load resources such as js, css & image files
