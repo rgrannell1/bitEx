@@ -222,6 +222,12 @@ var createUserSession = function(user, res) {
 }
 
 
+// VERIFY USER SESSION HAS BEEN SET
+var hasUserSession = function(req) {
+	return !!req.signedCookies.user
+}
+
+
 
 // HANDLE FOR VALIDATING USER CREDENTIALS.
 //
@@ -288,12 +294,13 @@ var registerView = ( function() {
 } )()
 
 
+
+
+/*****************************************************/
 //
+//					Client API
 //
-//			Client API
-//
-//
-//
+/******************************************************/
 
 // SIGN IN REQUEST FROM CLIENT
 //
@@ -333,10 +340,6 @@ app.post('/register', function(req, res) {
 	register(user, res, registerView.success, registerView.failure)
 })
 
-var hasUserSession = function(req) {
-	return !!req.signedCookies.user
-}
-
 // home page / promo page view
 app.get('/', function(req, res) {
 	
@@ -364,6 +367,11 @@ app.get('/resources/:type/:sub/:file', function(req, res) {
 	var dPath = params.type + '/' + params.sub + '/' + params.file
 
 	res.sendFile(__dirname + '/client/resources/' + dPath)
+})
+
+// angular templates
+app.get('/templates/:file', function(req, res) {
+	res.sendFile(__dirname + '/views/templates/' + req.params.file)
 })
 
 app.listen(8080)
