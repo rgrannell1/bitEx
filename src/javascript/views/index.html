@@ -12,6 +12,28 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
 
+	<style type="text/css">
+
+		/* positioning css */
+
+		#get-details, #get-password {
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+
+		.form-heading {
+			margin-bottom: 20px;
+		}
+
+		.well {
+			margin-top: 20px;
+			padding-left:  50px;
+			padding-right: 50px;
+			padding-bottom: 30px;
+		}
+
+	</style>
+
 </head>
 
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
@@ -42,7 +64,7 @@
 				<div class="well">
 					<div id="register">
 
-						<h2>Register</h2>
+						<h3 class="form-heading">Register</h3>
 
 						<form class="form-main" role="form">
 
@@ -62,7 +84,7 @@
 								<input type="password" class="form-control" spellcheck="false" id="password" name="password" placeholder="Password">
 							</div>
 
-							<button class="btn btn-lg btn-primary" type="button" id="get-password">Register</button>
+							<button class="btn btn-lg btn-primary" type="button" id="get-details">Register</button>
 
 						</form>
 
@@ -72,7 +94,7 @@
 
 					<div id="signin">
 
-						<h2>Sign In</h2>
+						<h3 class="form-heading">Sign In</h3>
 
 						<form class="form-main" role="form" method="post" action="/signin">
 
@@ -91,6 +113,7 @@
 						Don't have an account? <a href="#signin" id="register-link">Sign up</a>
 
 					</div>
+
 				</div>
 			</div>
 		</div>
