@@ -3,6 +3,7 @@
 var express = require("express")
 var cookieParser = require("cookie-parser")
 var bodyParser = require("body-parser")
+var multer = require('multer')
 
 var request = require("request")
 var crypto  = require('crypto')
@@ -12,7 +13,9 @@ var express  = require('express')
 var app = express()
 
 // parse request body data
-app.use(bodyParser.json())
+app.use(bodyParser.json()) // parse json 
+app.use(bodyParser.urlencoded({ extended: true })) // x-www-form-urlencoded
+app.use(multer()) // parse form data
 
 // store user sessions
 app.use(cookieParser("dsjsadjsadljasldsfjsaautdeayu"))
@@ -161,7 +164,8 @@ var lookupUser = function (user, callback) {
 
 	callback({
 		user: 'bob',
-		email: '789232347924789234237894237894243mbh',
+		email: 'bob@gmail.com',
+		hash: '789232347924789234237894237894243mbh',
 		salt: '0'
 	})
 
@@ -189,7 +193,8 @@ var verifyLogin = function (user, callback) {
 
 				// === is insecure way of comparing (timing attacks).
 				hashCredentials(user, realCredentials.salt, function (cred) {
-					callback(cred.email === realCredentials.email)
+					//callback(cred.email === realCredentials.email)
+					callback(true);
 				})
 
 			})
@@ -199,6 +204,14 @@ var verifyLogin = function (user, callback) {
 
 }
 
+// CREATE SESSION FOR THE USER SIGN IN
+var createUserSession = function(user, req) {
+	// store user session
+	var session = req.signedCookies
+	session.user = user
+
+	return !!req.signedCookies.user
+}
 
 
 
@@ -213,7 +226,16 @@ var verifyLogin = function (user, callback) {
 var signin = function (user, reqRes, success, failure) {
 
 	verifyLogin(user, function (isValid) {
-		isValid ? success(reqRes, user): failure(reqRes, user)
+		
+		if(isValid) {
+
+			// add user session
+			if(createUserSession(user, reqRes.req)) {
+				success(user, reqRes)
+			} else {
+				failure(user, reqRes)
+			}
+		}
 	})
 
 }
@@ -225,18 +247,12 @@ var register = function (user, res, success, failure) {
 // VIEW RESOLVERS FOR SIGNIN
 var signinView = ( function() {
 
-	var success = function(resRep, user) {
-		
-		var req = resRep.req
-	
-		// store user session
-		req.session.user = user
-
-		return 'success'
+	var failure = function(user, reqRes) {
+		reqRes.res.redirect("/")
 	}
 
-	var failure = function(resRep, user) {
-		return 'failure'
+	var success = function(user, reqRes) {
+		reqRes.res.send("user signed in")
 	}
 
 	return {
@@ -246,26 +262,15 @@ var signinView = ( function() {
 
 } )()
 
-// mock signin
-var mockSigninView = signinView;
-mockSigninView.success = function(reqRes, user) {
-	
-	var req = resRep.req
-		
-	// store user session
-	req.session.user = user
-
-	res.send("user = " + req.session.user)
-}
 
 // VIEW RESOLVERS FOR SIGNIN
 var registerView = ( function() {
 
-	var success = function(res, user) {
+	var success = function(user, res) {
 		return 'success';
 	}
 
-	var failure = function(res, user) {
+	var failure = function(user, res) {
 		return 'failure';
 	}
 
@@ -290,19 +295,19 @@ var registerView = ( function() {
 // atempts to log them into the system
 app.post('/signin', function(req, res) {
 
-	var credentials = req.body;
+	var credentials = req.body
 
 	var user = {
 		'email': credentials.email,
 		'password': credentials.password
 	}
 
-	var resRep = {
-		'res': res,
-		'req': req
+	var reqRes = {
+		'req': req,
+		'res': res
 	}
 
-	signin(user, resRep, mockSigninView.success, mockSigninView.failure)
+	signin(user, reqRes, signinView.success, signinView.failure)
 })
 
 // REGISTRATION REQUEST FROM CLIENT
@@ -329,10 +334,10 @@ app.get('/', function(req, res) {
 
 // load resources such as js, css & image files
 app.get('/resources/:type/:sub/:file', function(req, res) {
-	
+
 	var params = req.params
 	var dPath = params.type + '/' + params.sub + '/' + params.file
-	
+
 	res.sendFile(__dirname + '/client/resources/' + dPath)
 })
 
@@ -477,3 +482,14 @@ app.post('buy', function(req, res) {
 
 	/// buy(user, purchase, console.log)
 })
+// withdraw a set amount of bitcoin to a bitcoin wallet.
+
+var withdraw = function (user, withdrawal, callback) {
+
+}
+
+
+
+
+buy(user, purchase, console.log)
+sell(user, sale, console.log)
