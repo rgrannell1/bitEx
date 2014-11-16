@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
+	<link rel="stylesheet" href="/resources/css/custom/override.css">
+
 	<!-- Latest compiled and minified JavaScript -->
 	<title>Coinise</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
@@ -18,8 +20,8 @@
 	<script>
 	var coinise = angular.module('coinise', ['ngRoute', 'coiniseControllers']);
 
-	coinise.config(['$routeProvider', 
-		
+	coinise.config(['$routeProvider',
+
 		function($routeProvider) {
 
 			$routeProvider.when('/buy', {
@@ -33,7 +35,7 @@
 				'templateUrl': 'templates/withdraw.html'
 			}).otherwise({
 				'redirectTo': '/dashboard'
-			})	
+			})
 		}
 	]);
 </script>
@@ -75,11 +77,11 @@
 	.bloat {
 		padding: 20px;
 		margin-bottom: 20px;
-		border: 1px solid rgba(0, 0, 0, 0.1);	
+		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.bloat:after {
-		clear: both;	
+		clear: both;
 	}
 
 
@@ -135,15 +137,15 @@
 
 							getBitStatus( function poll() {
 
-									
+
 									setTimeout(function() {
 
 										getBitStatus(poll)
 
 									}, 10000)
 							})
-							
-						
+
+
 						});
 					</script>
 				</div>
@@ -244,7 +246,7 @@
 													<header>
 														<div class="page-header">
 															<h1>Sell Bitcoin
-															<small>Bitcoin into Euro</small> 
+															<small>Bitcoin into Euro</small>
 															</h1>
 														</div>
 													</header>
